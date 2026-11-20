@@ -1,0 +1,9 @@
+id,val_acc,latency_ms,size_mb,peak_mem_mb,description
+9,61.04,0.875,0.538,11.0,res32 stem24 :: conv3x1-64-relu | dwsep5x3-64-relu6 | conv3x1-160-silu | dwsep5x1-64-leaky_relu
+27,57.68,0.682,0.394,10.2,res32 stem24 :: conv3x1-48-relu | dwsep5x3-64-relu | conv3x1-128-relu6
+43,55.02,0.279,0.338,10.2,res24 stem24 :: dwsep3x1-48-relu | dwsep5x2-64-relu | conv3x1-128-relu6
+34,51.92,0.200,0.224,9.6,res16 stem32 :: conv3x3-16-leaky_relu | conv7x2-24-relu
+19,51.06,0.506,0.078,9.9,res24 stem16 :: dwsep5x3-64-leaky_relu | dwsep3x1-64-relu6
+31,50.76,0.167,0.070,9.4,res16 stem32 :: conv3x3-16-leaky_relu | dwsep7x2-48-relu
+38,48.08,0.310,0.069,9.5,res24 stem24 :: conv3x1-48-relu | dwsep7x1-64-relu6
+41,47.10,0.066,0.033,9.4,res16 stem32 :: dwsep3x3-16-leaky_relu | dwsep3x2-48-leaky_relu

@@ -1,0 +1,50 @@
+{
+  "config": {
+    "resolution": 32,
+    "stem_channels": 24,
+    "stages": [
+      {
+        "depth": 1,
+        "channels": 64,
+        "kernel": 3,
+        "block": "conv",
+        "activation": "relu"
+      },
+      {
+        "depth": 3,
+        "channels": 64,
+        "kernel": 5,
+        "block": "dwsep",
+        "activation": "relu6"
+      },
+      {
+        "depth": 1,
+        "channels": 160,
+        "kernel": 3,
+        "block": "conv",
+        "activation": "silu"
+      },
+      {
+        "depth": 1,
+        "channels": 64,
+        "kernel": 5,
+        "block": "dwsep",
+        "activation": "leaky_relu"
+      }
+    ]
+  },
+  "description": "res32 stem24 :: conv3x1-64-relu | dwsep5x3-64-relu6 | conv3x1-160-silu | dwsep5x1-64-leaky_relu",
+  "search_val_acc": 61.04,
+  "fitness": 0.5821429935510254,
+  "latency_ms": 0.8749369999999992,
+  "size_mb": 0.5379133224487305,
+  "peak_mem_mb": 11.046875,
+  "params": 140322,
+  "macs": 25320576,
+  "found_at_candidate_id": 9,
+  "constraints": {
+    "max_latency_ms": 1.5,
+    "max_size_mb": 1.0,
+    "max_peak_mem_mb": 16.0
+  }
+}

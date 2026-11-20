@@ -1,0 +1,10 @@
+# datasets (large, downloadable) - see README for how to obtain them
+data/
+# resumable training state (large, transient)
+*.resume
+*.resume.tmp
+# logs and caches
+logs/
+__pycache__/
+*.pyc
+.DS_Store

@@ -1,0 +1,117 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Edge Computing Assignment 4 - Technical Report</title>
+<style>
+    body{font-family:-apple-system,Helvetica,Arial,sans-serif;font-size:10.5pt;line-height:1.38;margin:0;color:#111}
+    h1{font-size:20pt;margin:0 0 4pt} h2{font-size:14pt;border-bottom:1.5px solid #333;margin-top:18pt;padding-bottom:2pt}
+    h3{font-size:11.5pt;margin:12pt 0 4pt} table{border-collapse:collapse;font-size:8.5pt;margin:6pt 0;width:100%}
+    th,td{border:1px solid #999;padding:2.5pt 4pt;text-align:left} th{background:#e8e8e8}
+    pre,code{font-family:Menlo,monospace;font-size:8pt} pre.term{background:#1e1e1e;color:#d8d8d8;padding:6pt;
+    border-radius:4pt;white-space:pre-wrap;font-size:7pt;line-height:1.25}
+    img{max-width:100%} .eq{background:#f4f4f4;padding:4pt 8pt;font-family:Menlo,monospace;font-size:9pt}
+    @page{size:A4;margin:16mm 15mm}
+    </style></head><body>
+<h1>Edge Computing &amp; Intelligent Systems - Assignment 4</h1>
+<p><b>Technical report</b> - Knowledge distillation (Q1) and hardware-aware neural architecture search (Q2).
+Platform: macOS, Apple M4; PyTorch (MPS) for training, ONNX Runtime (CPU) for inference.</p>
+<p>Repository layout: <code>edge_common/</code> (data, training engine, ONNX/profiling helpers), <code>q1_distillation/</code>, <code>q2_nas/</code>, <code>benchmarks/</code>,
+<code>results/</code>, <code>checkpoints/</code>, <code>onnx_models/</code>.</p>
+<h2>1. Question 1 - Knowledge distillation</h2>
+<h3>1.1 Models (implemented from scratch, CIFAR-adapted)</h3>
+<ul>
+<li><b>Teacher - ResNet-50</b>: bottleneck blocks 3-4-6-3, 3x3 stem without max-pool; stem stride 2 (4x cheaper than the stride-1 CIFAR variant).</li>
+<li><b>MobileNetV2</b>: inverted residuals with linear bottlenecks, ReLU6, width multiplier 1.0.</li>
+<li><b>SqueezeNet v1.1</b>: Fire modules (squeeze 1x1 -> expand 1x1 || 3x3), BatchNorm after every convolution, fully-convolutional classifier.</li>
+<li><b>EfficientNet-Lite0</b>: MBConv blocks without squeeze-excite, ReLU6, fixed stem/head, stochastic depth.</li>
+</ul>
+<table><tr><th>model</th><th>role</th><th>parameters (M)</th><th>MACs (M), 32x32 input</th></tr><tr><td>resnet50</td><td>teacher</td><td>23.71</td><td>325</td></tr><tr><td>mobilenetv2</td><td>student</td><td>2.35</td><td>88</td></tr><tr><td>squeezenet</td><td>student</td><td>0.78</td><td>92</td></tr><tr><td>efficientnet_lite0</td><td>student</td><td>3.50</td><td>116</td></tr></table>
+<h3>1.2 Distillation framework (<code>q1_distillation/distill.py</code>)</h3>
+<p>The framework implements soft-target distillation with a temperature softmax, the combined hard + soft objective, and feature-based distillation:</p>
+<div class="eq">L = alpha * CE(s, y) + (1 - alpha) * T^2 * KL( softmax(t/T) || softmax(s/T) ) + beta * mean_i MSE( std(A_i(f_s,i)), std(f_t,i) )</div>
+<ul>
+<li><b>Soft targets / temperature</b>: the teacher's logits are softened with <code>softmax(z/T)</code> (T = 4); the student matches them with KL divergence.
+The <code>T^2</code> factor keeps the soft-term gradient comparable in size to the hard-label term (Hinton et al., 2015).</li>
+<li><b>Hard + soft</b>: <code>alpha</code> = 0.3 weights the cross-entropy on the ground-truth labels.</li>
+<li><b>Feature-based</b>: 1x1-conv + BatchNorm adapters <code>A_i</code> map the student's mid- and last-stage feature maps to the teacher's
+(layer3: 1024 channels, layer4: 2048 channels); teacher maps are average-pooled to the student's spatial size and both maps are standardised per
+sample, so the term is scale-free; <code>beta</code> = 1. The adapters exist only during training - they are not part of the student's checkpoint or ONNX graph.</li>
+<li>The teacher is frozen, kept in eval mode, and evaluated on the same augmented batch as the student.</li>
+</ul>
+<h3>1.3 Training protocol (<code>edge_common/engine.py</code>)</h3>
+<p>SGD with Nesterov momentum 0.9, learning rate 0.1 with 1-epoch linear warm-up and cosine decay, weight decay 5e-4 (not applied to BatchNorm/bias),
+batch size 128, random-crop (padding 4) + horizontal-flip augmentation performed on the device, final-epoch weights (no checkpoint selection on the test set).
+The baseline pipeline (<code>train_baseline.py</code>) and the distillation pipeline (<code>train_kd.py</code>) share every hyper-parameter and seed and differ only in the loss.
+Checkpoints are resumable (state is written after every epoch).</p><h3>1.4 Teacher result</h3>
+<p>ResNet-50 on CIFAR-100: <b>67.90% top-1</b> on the 10 000-image test set after 24 epochs
+(23.71 M parameters).</p>
+<img src="figures/q1_curves.png" width="70%"><p><i>Figure 1 - CIFAR-100 test accuracy per epoch of the teacher.</i></p>
+<pre class='term'>[teacher] epoch  22/24 loss 0.563 train_acc 83.30 test_acc 67.94  (126.0s)
+[teacher] epoch  23/24 loss 0.485 train_acc 85.89 test_acc 67.83  (142.0s)
+[teacher] epoch  24/24 loss 0.470 train_acc 86.36 test_acc 67.90  (152.7s)
+[teacher] FINAL CIFAR-100 test top-1 = 67.90%  (train time this run 433s)</pre><h3>1.5 Unified inference and ONNX deployment</h3>
+<ul>
+<li><code>q1_distillation/inference.py</code> - one <code>StudentPredictor(arch, variant, backend)</code> interface for all three students in both variants (baseline / distilled),
+with PyTorch or ONNX Runtime back-ends; supports single images, CIFAR-100 test samples and full test-set evaluation from the command line.</li>
+<li><code>q1_distillation/export_onnx.py</code> - exports every model to ONNX (opset 17, dynamic batch) and verifies it against PyTorch with ONNX Runtime
+(the export fails if logits differ by more than 1e-4).</li>
+<li><code>q1_distillation/onnx_infer.py</code> - stand-alone CPU inference with ONNX Runtime only (numpy + Pillow + onnxruntime), including single-image latency.</li>
+</ul>
+<h2>2. Question 2 - Hardware-aware neural architecture search</h2>
+<h3>2.1 Search space and architecture generator (<code>q2_nas/search_space.py</code>, <code>generator.py</code>)</h3>
+<table><tr><th>dimension</th><th>choices</th></tr>
+<tr><td>convolutional depth</td><td>2-4 stages, 1-3 blocks per stage (stride 2 at the first block of every stage after the first)</td></tr>
+<tr><td>filters / channels</td><td>stem 16/24/32; per-stage channels 16, 24, 32, 48, 64, 96, 128, 160</td></tr>
+<tr><td>kernel size</td><td>3 / 5 / 7 per stage</td></tr>
+<tr><td>block type</td><td>regular convolution or depthwise-separable (depthwise k x k + pointwise 1x1), residual connection when shapes match</td></tr>
+<tr><td>activation</td><td>ReLU, ReLU6, Hardswish, SiLU, LeakyReLU (per stage)</td></tr>
+<tr><td>input resolution</td><td>16 / 24 / 32 (bilinear resize <i>inside</i> the network graph, so every deployed model takes a 3x32x32 input)</td></tr></table>
+<p>An architecture is a JSON dictionary. <code>generator.build_from_config</code> turns any sampled dictionary into an <code>nn.Module</code>
+(stem -> stages -> global average pooling -> linear classifier), so the same code builds candidates during the search and the final network.</p>
+<h3>2.2 Search strategy and hardware-aware pipeline (<code>q2_nas/search.py</code>, <code>hardware.py</code>)</h3>
+<p><b>Aging (regularised) evolution</b>: a FIFO population of 12; at every step a tournament of 4 picks the fittest parent and a child is produced
+by mutation (or, with probability 0.25, crossover with a second tournament winner) and replaces the oldest member.
+For <b>every</b> candidate, <i>before any training</i>, the network is exported to ONNX and run with ONNX Runtime on the <b>CPU</b> (1 thread, batch 1) in a fresh process, measuring</p>
+<ul><li>median inference <b>latency</b>,</li><li>model <b>storage size</b> (ONNX file),</li><li><b>peak inference memory</b> (RSS growth, <code>resource.getrusage</code>).</li></ul>
+<p>Candidates that violate the predefined deployment budget are <b>rejected without being trained</b>:</p>
+<div class="eq">latency &lt;= 1.5 ms,   model size &lt;= 1.0 MB,   peak inference memory &lt;= 16.0 MB</div>
+<p>Feasible candidates are trained on CIFAR-10 (3 epochs on 15000 training images; a held-out
+5000-image validation split of the training set is used for scoring - the test set is never used during the search) and ranked by
+<code>fitness = val_acc - 0.03 * latency/max_latency - 0.02 * size/max_size</code>,
+so accuracy is traded off against <i>measured</i> latency and storage size.</p>
+<h3>2.3 Search results</h3>
+<p><b>24</b> candidates were trained and <b>20</b> were rejected by the hardware constraints (no training time was spent on them).</p>
+<img src="figures/q2_search.png" width="85%"><p><i>Figure 2 - left: proxy validation accuracy of every trained candidate and the running best; right: measured latency vs ONNX size of
+rejected (x) and trained (dots) candidates, dotted lines = deployment constraints.</i></p>
+<h3>2.4 Best discovered architecture</h3>
+<p><code>res32 stem24 :: conv3x1-64-relu | dwsep5x3-64-relu6 | conv3x1-160-silu | dwsep5x1-64-leaky_relu</code></p>
+<p>Measured on the CPU during the search: latency <b>0.875 ms</b>, model size <b>0.538 MB</b>,
+peak inference memory <b>11.0 MB</b>, 140.3 k parameters,
+25.3 M MACs; proxy validation accuracy 61.04%.</p><h3>2.5 Top candidates, example rejections and Pareto front</h3>
+<table><tr><th>id</th><th>val %</th><th>lat ms</th><th>MB</th><th>mem MB</th><th>architecture</th></tr><tr><td>9</td><td>61.04</td><td>0.875</td><td>0.538</td><td>11.047</td><td>res32 stem24 :: conv3x1-64-relu | dwsep5x3-64-relu6 | conv3x1-160-silu | dwsep5x1-64-leaky_relu</td></tr><tr><td>27</td><td>57.68</td><td>0.682</td><td>0.394</td><td>10.203</td><td>res32 stem24 :: conv3x1-48-relu | dwsep5x3-64-relu | conv3x1-128-relu6</td></tr><tr><td>43</td><td>55.02</td><td>0.279</td><td>0.338</td><td>10.172</td><td>res24 stem24 :: dwsep3x1-48-relu | dwsep5x2-64-relu | conv3x1-128-relu6</td></tr><tr><td>26</td><td>54.04</td><td>0.281</td><td>0.586</td><td>10.484</td><td>res16 stem32 :: dwsep3x1-16-relu | conv7x2-48-relu</td></tr><tr><td>7</td><td>52.32</td><td>0.505</td><td>0.996</td><td>12.188</td><td>res16 stem16 :: conv7x2-24-hardswish | conv5x1-96-relu | conv3x1-48-relu | conv7x1-48-silu</td></tr><tr><td>34</td><td>51.92</td><td>0.200</td><td>0.224</td><td>9.562</td><td>res16 stem32 :: conv3x3-16-leaky_relu | conv7x2-24-relu</td></tr></table>
+<table><tr><th>id</th><th>reason for rejection</th><th>lat ms</th><th>MB</th></tr><tr><td>0</td><td>latency 2.64ms &gt; 1.5ms; size 2.01MB &gt; 1.0MB; memory 16.8MB &gt; 16.0MB</td><td>2.641</td><td>2.007</td></tr><tr><td>1</td><td>size 5.86MB &gt; 1.0MB; memory 24.1MB &gt; 16.0MB</td><td>1.414</td><td>5.863</td></tr><tr><td>2</td><td>latency 32.13ms &gt; 1.5ms; size 6.61MB &gt; 1.0MB; memory 25.4MB &gt; 16.0MB</td><td>32.125</td><td>6.608</td></tr><tr><td>4</td><td>size 3.05MB &gt; 1.0MB; memory 17.4MB &gt; 16.0MB</td><td>1.296</td><td>3.054</td></tr><tr><td>6</td><td>latency 7.59ms &gt; 1.5ms; size 1.55MB &gt; 1.0MB</td><td>7.591</td><td>1.553</td></tr><tr><td>12</td><td>size 7.01MB &gt; 1.0MB; memory 28.4MB &gt; 16.0MB</td><td>1.295</td><td>7.015</td></tr></table>
+<table><tr><th>id</th><th>val %</th><th>lat ms</th><th>MB</th><th>mem MB</th><th>architecture</th></tr><tr><td>9</td><td>61.04</td><td>0.875</td><td>0.538</td><td>11.0</td><td>res32 stem24 :: conv3x1-64-relu | dwsep5x3-64-relu6 | conv3x1-160-silu | dwsep5x1-64-leaky_relu</td></tr><tr><td>27</td><td>57.68</td><td>0.682</td><td>0.394</td><td>10.2</td><td>res32 stem24 :: conv3x1-48-relu | dwsep5x3-64-relu | conv3x1-128-relu6</td></tr><tr><td>43</td><td>55.02</td><td>0.279</td><td>0.338</td><td>10.2</td><td>res24 stem24 :: dwsep3x1-48-relu | dwsep5x2-64-relu | conv3x1-128-relu6</td></tr><tr><td>34</td><td>51.92</td><td>0.200</td><td>0.224</td><td>9.6</td><td>res16 stem32 :: conv3x3-16-leaky_relu | conv7x2-24-relu</td></tr><tr><td>19</td><td>51.06</td><td>0.506</td><td>0.078</td><td>9.9</td><td>res24 stem16 :: dwsep5x3-64-leaky_relu | dwsep3x1-64-relu6</td></tr><tr><td>31</td><td>50.76</td><td>0.167</td><td>0.070</td><td>9.4</td><td>res16 stem32 :: conv3x3-16-leaky_relu | dwsep7x2-48-relu</td></tr><tr><td>38</td><td>48.08</td><td>0.310</td><td>0.069</td><td>9.5</td><td>res24 stem24 :: conv3x1-48-relu | dwsep7x1-64-relu6</td></tr><tr><td>41</td><td>47.10</td><td>0.066</td><td>0.033</td><td>9.4</td><td>res16 stem32 :: dwsep3x3-16-leaky_relu | dwsep3x2-48-leaky_relu</td></tr></table>
+<pre class='term'>  [reject] # 22 size 3.63MB &gt; 1.0MB; memory 19.5MB &gt; 16.0MB
+  [reject] # 24 latency 2.45ms &gt; 1.5ms; size 15.56MB &gt; 1.0MB; memory 46.5MB &gt; 16.0MB
+  [reject] # 28 size 1.06MB &gt; 1.0MB
+  [reject] # 29 latency 1.83ms &gt; 1.5ms; size 2.77MB &gt; 1.0MB; memory 16.1MB &gt; 16.0MB
+  [reject] # 32 latency 2.00ms &gt; 1.5ms; size 2.05MB &gt; 1.0MB
+  [reject] # 33 size 1.72MB &gt; 1.0MB
+  [reject] # 35 latency 1.52ms &gt; 1.5ms
+  [reject] # 36 latency 2.47ms &gt; 1.5ms
+  [reject] # 39 size 1.13MB &gt; 1.0MB
+  [reject] # 42 latency 3.85ms &gt; 1.5ms; size 5.29MB &gt; 1.0MB; memory 28.5MB &gt; 16.0MB
+search finished in 3.8 min: 24 trained, 20 rejected by hardware constraints
+BEST: val_acc 61.04% latency 0.87ms size 0.54MB mem 11.0MB</pre>
+<h3>2.6 Deployment pipeline</h3>
+<ul>
+<li><code>q2_nas/train_best.py</code> - trains the best architecture (<code>results/q2/best_architecture.json</code>) from scratch on the full CIFAR-10 training set and evaluates it on the test set.</li>
+<li><code>q2_nas/export_onnx.py</code> - exports to ONNX and verifies against PyTorch; <code>q2_nas/inference.py</code> - ONNX Runtime CPU inference for single images, samples or the whole test set.</li>
+</ul>
+
+<h2>3. Implementation notes</h2>
+<ul>
+<li>Models are implemented from scratch in PyTorch (no torchvision / timm); training uses the Apple-silicon GPU (MPS) with the dataset and augmentation held on the device.</li>
+<li>The teacher uses a stride-2 stem, which makes the ResNet-50 about 4x cheaper than the stride-1 CIFAR variant.</li>
+<li>The evolutionary search strategy was chosen from the two options allowed by the assignment (evolutionary or Optuna).</li>
+<li>Latency is measured, not estimated, on the host CPU through ONNX Runtime (1 intra-op thread, batch 1); the search ran with no other jobs on the machine.</li>
+<li>Every stage is reproducible with <code>bash run_pipeline.sh &lt;stage&gt;</code>; see <code>README.md</code>.</li>
+</ul>
+</body></html>

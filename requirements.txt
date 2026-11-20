@@ -1,0 +1,10 @@
+# Tested with Python 3.9 on macOS 15 (Apple M4, PyTorch MPS back-end).
+# torch / onnx / onnxruntime versions are the ones used to produce the reported results.
+torch==2.8.0
+numpy>=1.26
+pillow>=10
+onnx==1.19.1
+onnxruntime==1.19.2
+matplotlib>=3.8      # report figures only
+pandas>=2.0          # data preparation + report only
+pyarrow>=21          # ONLY needed once, to convert the CIFAR-100 parquet files (edge_common/prepare_cifar100.py)

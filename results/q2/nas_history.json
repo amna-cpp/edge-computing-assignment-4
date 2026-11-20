@@ -1,0 +1,1859 @@
+{
+ "constraints": {
+  "max_latency_ms": 1.5,
+  "max_size_mb": 1.0,
+  "max_peak_mem_mb": 16.0
+ },
+ "args": {
+  "budget": 24,
+  "population": 12,
+  "sample": 4,
+  "crossover_prob": 0.25,
+  "epochs": 3,
+  "train_limit": 15000,
+  "val_size": 5000,
+  "max_latency_ms": 1.5,
+  "max_size_mb": 1.0,
+  "max_peak_mem_mb": 16.0,
+  "w_latency": 0.03,
+  "w_size": 0.02,
+  "seed": 0,
+  "device": "auto",
+  "no_resume": false
+ },
+ "history": [
+  {
+   "id": 0,
+   "step": 0,
+   "origin": "random",
+   "config": {
+    "resolution": 24,
+    "stem_channels": 24,
+    "stages": [
+     {
+      "depth": 2,
+      "channels": 160,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "silu"
+     },
+     {
+      "depth": 2,
+      "channels": 48,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "hardswish"
+     }
+    ]
+   },
+   "latency_ms": 2.640792000000003,
+   "latency_ms_p95": 2.7571378500000003,
+   "size_mb": 2.0068588256835938,
+   "peak_mem_mb": 16.84375,
+   "params": 525642,
+   "macs": 90427872,
+   "status": "rejected",
+   "reject_reason": "latency 2.64ms > 1.5ms; size 2.01MB > 1.0MB; memory 16.8MB > 16.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 1,
+   "step": 0,
+   "origin": "random",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 16,
+    "stages": [
+     {
+      "depth": 2,
+      "channels": 32,
+      "kernel": 5,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 3,
+      "channels": 96,
+      "kernel": 5,
+      "block": "conv",
+      "activation": "hardswish"
+     },
+     {
+      "depth": 2,
+      "channels": 96,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 2,
+      "channels": 160,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 1.4139999999999986,
+   "latency_ms_p95": 1.4628892500000088,
+   "size_mb": 5.8632354736328125,
+   "peak_mem_mb": 24.140625,
+   "params": 1536986,
+   "macs": 59013696,
+   "status": "rejected",
+   "reject_reason": "size 5.86MB > 1.0MB; memory 24.1MB > 16.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 2,
+   "step": 0,
+   "origin": "random",
+   "config": {
+    "resolution": 32,
+    "stem_channels": 16,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 128,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 2,
+      "channels": 96,
+      "kernel": 3,
+      "block": "dwsep",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 32.12545799999988,
+   "latency_ms_p95": 33.02305065000009,
+   "size_mb": 6.608464241027832,
+   "peak_mem_mb": 25.375,
+   "params": 1732538,
+   "macs": 1753392064,
+   "status": "rejected",
+   "reject_reason": "latency 32.13ms > 1.5ms; size 6.61MB > 1.0MB; memory 25.4MB > 16.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 3,
+   "step": 0,
+   "origin": "random",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 32,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 32,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "relu"
+     },
+     {
+      "depth": 1,
+      "channels": 96,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 0.13814549999999898,
+   "latency_ms_p95": 0.14748329999999807,
+   "size_mb": 0.03859138488769531,
+   "peak_mem_mb": 9.5,
+   "params": 9514,
+   "macs": 1182656,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 46.2,
+   "train_acc": 44.5846688034188,
+   "train_time_s": 4.542353868484497,
+   "fitness": 0.4584652623022461
+  },
+  {
+   "id": 4,
+   "step": 1,
+   "origin": "random",
+   "config": {
+    "resolution": 24,
+    "stem_channels": 32,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 24,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 5,
+      "block": "conv",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 2,
+      "channels": 96,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "hardswish"
+     }
+    ]
+   },
+   "latency_ms": 1.2955205000000012,
+   "latency_ms_p95": 1.3557955499999976,
+   "size_mb": 3.054178237915039,
+   "peak_mem_mb": 17.4375,
+   "params": 799594,
+   "macs": 36487104,
+   "status": "rejected",
+   "reject_reason": "size 3.05MB > 1.0MB; memory 17.4MB > 16.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 5,
+   "step": 1,
+   "origin": "random",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 16,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 5,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 3,
+      "channels": 32,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 0.2080829999999978,
+   "latency_ms_p95": 0.22839344999999733,
+   "size_mb": 0.2452564239501953,
+   "peak_mem_mb": 9.953125,
+   "params": 63578,
+   "macs": 9023808,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 51.62,
+   "train_acc": 49.626068376068375,
+   "train_time_s": 3.4401087760925293,
+   "fitness": 0.5071332115209961
+  },
+  {
+   "id": 6,
+   "step": 2,
+   "origin": "random",
+   "config": {
+    "resolution": 32,
+    "stem_channels": 32,
+    "stages": [
+     {
+      "depth": 2,
+      "channels": 64,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "relu6"
+     },
+     {
+      "depth": 3,
+      "channels": 128,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "silu"
+     },
+     {
+      "depth": 2,
+      "channels": 96,
+      "kernel": 3,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 1,
+      "channels": 160,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "relu6"
+     }
+    ]
+   },
+   "latency_ms": 7.5912295000000185,
+   "latency_ms_p95": 7.657474399999995,
+   "size_mb": 1.5530462265014648,
+   "peak_mem_mb": 14.734375,
+   "params": 406826,
+   "macs": 325493824,
+   "status": "rejected",
+   "reject_reason": "latency 7.59ms > 1.5ms; size 1.55MB > 1.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 7,
+   "step": 2,
+   "origin": "random",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 16,
+    "stages": [
+     {
+      "depth": 2,
+      "channels": 24,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "hardswish"
+     },
+     {
+      "depth": 1,
+      "channels": 96,
+      "kernel": 5,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 1,
+      "channels": 48,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 1,
+      "channels": 48,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "silu"
+     }
+    ]
+   },
+   "latency_ms": 0.5051665000000011,
+   "latency_ms_p95": 0.5255041500000043,
+   "size_mb": 0.9964637756347656,
+   "peak_mem_mb": 12.1875,
+   "params": 260442,
+   "macs": 16954848,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 52.32,
+   "train_acc": 49.826388888888886,
+   "train_time_s": 8.380553960800171,
+   "fitness": 0.4931673944873046
+  },
+  {
+   "id": 8,
+   "step": 3,
+   "origin": "random",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 24,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 16,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 2,
+      "channels": 48,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 0.2961039999999984,
+   "latency_ms_p95": 0.3114731999999912,
+   "size_mb": 0.5951080322265625,
+   "peak_mem_mb": 10.9375,
+   "params": 155394,
+   "macs": 10684896,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 51.1,
+   "train_acc": 50.46073717948718,
+   "train_time_s": 4.318491220474243,
+   "fitness": 0.4931757593554688
+  },
+  {
+   "id": 9,
+   "step": 4,
+   "origin": "random",
+   "config": {
+    "resolution": 32,
+    "stem_channels": 24,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 3,
+      "channels": 64,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "relu6"
+     },
+     {
+      "depth": 1,
+      "channels": 160,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "silu"
+     },
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     }
+    ]
+   },
+   "latency_ms": 0.8749369999999992,
+   "latency_ms_p95": 0.9034080499999896,
+   "size_mb": 0.5379133224487305,
+   "peak_mem_mb": 11.046875,
+   "params": 140322,
+   "macs": 25320576,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 61.04,
+   "train_acc": 58.84748931623932,
+   "train_time_s": 20.129873991012573,
+   "fitness": 0.5821429935510254
+  },
+  {
+   "id": 10,
+   "step": 5,
+   "origin": "random",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 32,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 16,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "relu6"
+     },
+     {
+      "depth": 2,
+      "channels": 64,
+      "kernel": 3,
+      "block": "dwsep",
+      "activation": "relu6"
+     },
+     {
+      "depth": 1,
+      "channels": 160,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 3,
+      "channels": 64,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "silu"
+     }
+    ]
+   },
+   "latency_ms": 0.41820799999998937,
+   "latency_ms_p95": 0.43421455000000747,
+   "size_mb": 0.3113288879394531,
+   "peak_mem_mb": 10.390625,
+   "params": 80282,
+   "macs": 7362304,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 50.66,
+   "train_acc": 47.74305555555556,
+   "train_time_s": 5.0179359912872314,
+   "fitness": 0.4920092622412111
+  },
+  {
+   "id": 11,
+   "step": 6,
+   "origin": "random",
+   "config": {
+    "resolution": 32,
+    "stem_channels": 24,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 16,
+      "kernel": 5,
+      "block": "conv",
+      "activation": "hardswish"
+     },
+     {
+      "depth": 3,
+      "channels": 16,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "relu6"
+     }
+    ]
+   },
+   "latency_ms": 0.8796665000000009,
+   "latency_ms_p95": 0.9037268000000043,
+   "size_mb": 0.10847091674804688,
+   "peak_mem_mb": 9.578125,
+   "params": 26674,
+   "macs": 24400032,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 50.64,
+   "train_acc": 47.50934829059829,
+   "train_time_s": 11.806637048721313,
+   "fitness": 0.486637251665039
+  },
+  {
+   "id": 12,
+   "step": 7,
+   "origin": "random",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 24,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 64,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 3,
+      "channels": 32,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "silu"
+     },
+     {
+      "depth": 3,
+      "channels": 128,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 1.2945005000000038,
+   "latency_ms_p95": 1.373752700000011,
+   "size_mb": 7.014924049377441,
+   "peak_mem_mb": 28.421875,
+   "params": 1837770,
+   "macs": 34129152,
+   "status": "rejected",
+   "reject_reason": "size 7.01MB > 1.0MB; memory 28.4MB > 16.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 13,
+   "step": 7,
+   "origin": "random",
+   "config": {
+    "resolution": 32,
+    "stem_channels": 16,
+    "stages": [
+     {
+      "depth": 2,
+      "channels": 32,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "silu"
+     },
+     {
+      "depth": 2,
+      "channels": 128,
+      "kernel": 3,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 2,
+      "channels": 16,
+      "kernel": 3,
+      "block": "dwsep",
+      "activation": "relu"
+     },
+     {
+      "depth": 2,
+      "channels": 32,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     }
+    ]
+   },
+   "latency_ms": 0.6387290000000045,
+   "latency_ms_p95": 0.656650000000008,
+   "size_mb": 0.17298316955566406,
+   "peak_mem_mb": 10.0625,
+   "params": 44410,
+   "macs": 20484160,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 50.38,
+   "train_acc": 47.10870726495727,
+   "train_time_s": 13.766088008880615,
+   "fitness": 0.4875657566088867
+  },
+  {
+   "id": 14,
+   "step": 8,
+   "origin": "random",
+   "config": {
+    "resolution": 32,
+    "stem_channels": 16,
+    "stages": [
+     {
+      "depth": 2,
+      "channels": 96,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "relu"
+     },
+     {
+      "depth": 2,
+      "channels": 48,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "relu6"
+     }
+    ]
+   },
+   "latency_ms": 2.8245204999999967,
+   "latency_ms_p95": 2.842477100000007,
+   "size_mb": 1.3524084091186523,
+   "peak_mem_mb": 14.515625,
+   "params": 353994,
+   "macs": 101024224,
+   "status": "rejected",
+   "reject_reason": "latency 2.82ms > 1.5ms; size 1.35MB > 1.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 15,
+   "step": 8,
+   "origin": "random",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 24,
+    "stages": [
+     {
+      "depth": 2,
+      "channels": 96,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 3,
+      "channels": 16,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "relu6"
+     },
+     {
+      "depth": 1,
+      "channels": 48,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "relu6"
+     },
+     {
+      "depth": 1,
+      "channels": 160,
+      "kernel": 5,
+      "block": "conv",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 0.905041500000002,
+   "latency_ms_p95": 0.9160503000000055,
+   "size_mb": 1.5325565338134766,
+   "peak_mem_mb": 14.0,
+   "params": 400434,
+   "macs": 33918784,
+   "status": "rejected",
+   "reject_reason": "size 1.53MB > 1.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 16,
+   "step": 8,
+   "origin": "random",
+   "config": {
+    "resolution": 24,
+    "stem_channels": 24,
+    "stages": [
+     {
+      "depth": 2,
+      "channels": 32,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "relu"
+     },
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 0.36720850000000055,
+   "latency_ms_p95": 0.3869458500000082,
+   "size_mb": 0.09700202941894531,
+   "peak_mem_mb": 9.640625,
+   "params": 24682,
+   "macs": 5640832,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 50.1,
+   "train_acc": 47.429220085470085,
+   "train_time_s": 9.562915086746216,
+   "fitness": 0.4917157894116211
+  },
+  {
+   "id": 17,
+   "step": 9,
+   "origin": "random",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 32,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 96,
+      "kernel": 5,
+      "block": "conv",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 3,
+      "channels": 160,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "silu"
+     },
+     {
+      "depth": 2,
+      "channels": 32,
+      "kernel": 3,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     }
+    ]
+   },
+   "latency_ms": 3.317375000000025,
+   "latency_ms_p95": 3.333732700000008,
+   "size_mb": 2.428004264831543,
+   "peak_mem_mb": 16.375,
+   "params": 636554,
+   "macs": 143537472,
+   "status": "rejected",
+   "reject_reason": "latency 3.32ms > 1.5ms; size 2.43MB > 1.0MB; memory 16.4MB > 16.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 18,
+   "step": 9,
+   "origin": "random",
+   "config": {
+    "resolution": 24,
+    "stem_channels": 16,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "hardswish"
+     },
+     {
+      "depth": 3,
+      "channels": 24,
+      "kernel": 5,
+      "block": "conv",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 0.4090625000000084,
+   "latency_ms_p95": 0.41834519999999764,
+   "size_mb": 0.26894664764404297,
+   "peak_mem_mb": 10.203125,
+   "params": 69642,
+   "macs": 10746096,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 49.04,
+   "train_acc": 46.80154914529915,
+   "train_time_s": 10.199467182159424,
+   "fitness": 0.476839817047119
+  },
+  {
+   "id": 19,
+   "step": 10,
+   "origin": "random",
+   "config": {
+    "resolution": 24,
+    "stem_channels": 16,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 64,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 3,
+      "block": "dwsep",
+      "activation": "relu6"
+     }
+    ]
+   },
+   "latency_ms": 0.5057709999999882,
+   "latency_ms_p95": 0.518166350000003,
+   "size_mb": 0.07770919799804688,
+   "peak_mem_mb": 9.90625,
+   "params": 19530,
+   "macs": 8304256,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 51.06,
+   "train_acc": 48.263888888888886,
+   "train_time_s": 23.339099168777466,
+   "fitness": 0.49893039604003936
+  },
+  {
+   "id": 20,
+   "step": 11,
+   "origin": "random",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 24,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 24,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "hardswish"
+     },
+     {
+      "depth": 2,
+      "channels": 128,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "leaky_relu"
+     }
+    ]
+   },
+   "latency_ms": 0.34470849999999886,
+   "latency_ms_p95": 0.34976665000000934,
+   "size_mb": 0.6954870223999023,
+   "peak_mem_mb": 11.78125,
+   "params": 181418,
+   "macs": 12276992,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 49.98,
+   "train_acc": 48.177083333333336,
+   "train_time_s": 7.506522178649902,
+   "fitness": 0.47899608955200196
+  },
+  {
+   "id": 21,
+   "step": 12,
+   "origin": "crossover",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 16,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 96,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "relu6"
+     },
+     {
+      "depth": 3,
+      "channels": 32,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 1,
+      "channels": 160,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "relu"
+     },
+     {
+      "depth": 3,
+      "channels": 64,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "silu"
+     }
+    ]
+   },
+   "latency_ms": 0.8157709999999998,
+   "latency_ms_p95": 0.8284163500000004,
+   "size_mb": 3.946756362915039,
+   "peak_mem_mb": 19.0,
+   "params": 1033466,
+   "macs": 26047616,
+   "status": "rejected",
+   "reject_reason": "size 3.95MB > 1.0MB; memory 19.0MB > 16.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 22,
+   "step": 12,
+   "origin": "crossover",
+   "config": {
+    "resolution": 24,
+    "stem_channels": 16,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 64,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 3,
+      "channels": 64,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "relu6"
+     },
+     {
+      "depth": 1,
+      "channels": 160,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 3,
+      "channels": 64,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 1.2875625000000057,
+   "latency_ms_p95": 2.288904200000006,
+   "size_mb": 3.6283836364746094,
+   "peak_mem_mb": 19.515625,
+   "params": 949834,
+   "macs": 18702208,
+   "status": "rejected",
+   "reject_reason": "size 3.63MB > 1.0MB; memory 19.5MB > 16.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 23,
+   "step": 12,
+   "origin": "mutation",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 16,
+    "stages": [
+     {
+      "depth": 2,
+      "channels": 16,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "hardswish"
+     },
+     {
+      "depth": 1,
+      "channels": 96,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "relu"
+     },
+     {
+      "depth": 1,
+      "channels": 48,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 1,
+      "channels": 48,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "silu"
+     }
+    ]
+   },
+   "latency_ms": 0.27829149999999275,
+   "latency_ms_p95": 0.29092289999999643,
+   "size_mb": 0.34935760498046875,
+   "peak_mem_mb": 10.515625,
+   "params": 90666,
+   "macs": 7404000,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 49.42,
+   "train_acc": 46.93509615384615,
+   "train_time_s": 3.219766855239868,
+   "fitness": 0.48164701790039083
+  },
+  {
+   "id": 24,
+   "step": 13,
+   "origin": "mutation",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 16,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 128,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "hardswish"
+     },
+     {
+      "depth": 2,
+      "channels": 96,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 3,
+      "block": "dwsep",
+      "activation": "relu"
+     },
+     {
+      "depth": 3,
+      "channels": 160,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "silu"
+     }
+    ]
+   },
+   "latency_ms": 2.449125499999996,
+   "latency_ms_p95": 2.5230068999999866,
+   "size_mb": 15.557794570922852,
+   "peak_mem_mb": 46.546875,
+   "params": 4078122,
+   "macs": 80428096,
+   "status": "rejected",
+   "reject_reason": "latency 2.45ms > 1.5ms; size 15.56MB > 1.0MB; memory 46.5MB > 16.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 25,
+   "step": 13,
+   "origin": "mutation",
+   "config": {
+    "resolution": 24,
+    "stem_channels": 16,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 64,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 5,
+      "block": "conv",
+      "activation": "relu6"
+     }
+    ]
+   },
+   "latency_ms": 0.8198119999999962,
+   "latency_ms_p95": 0.8282952000000017,
+   "size_mb": 0.44966983795166016,
+   "peak_mem_mb": 10.671875,
+   "params": 117130,
+   "macs": 22377088,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 50.18,
+   "train_acc": 48.55769230769231,
+   "train_time_s": 26.210749864578247,
+   "fitness": 0.47641036324096686
+  },
+  {
+   "id": 26,
+   "step": 14,
+   "origin": "mutation",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 32,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 16,
+      "kernel": 3,
+      "block": "dwsep",
+      "activation": "relu"
+     },
+     {
+      "depth": 2,
+      "channels": 48,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 0.28056200000001197,
+   "latency_ms_p95": 0.28868160000001947,
+   "size_mb": 0.5863065719604492,
+   "peak_mem_mb": 10.484375,
+   "params": 153034,
+   "macs": 10060256,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 54.04,
+   "train_acc": 52.19684829059829,
+   "train_time_s": 4.022173881530762,
+   "fitness": 0.5230626285607908
+  },
+  {
+   "id": 27,
+   "step": 15,
+   "origin": "mutation",
+   "config": {
+    "resolution": 32,
+    "stem_channels": 24,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 48,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 3,
+      "channels": 64,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "relu"
+     },
+     {
+      "depth": 1,
+      "channels": 128,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu6"
+     }
+    ]
+   },
+   "latency_ms": 0.6817915000000008,
+   "latency_ms_p95": 0.7049788500000042,
+   "size_mb": 0.3941335678100586,
+   "peak_mem_mb": 10.203125,
+   "params": 102834,
+   "macs": 20010240,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 57.68,
+   "train_acc": 55.70245726495727,
+   "train_time_s": 16.946127891540527,
+   "fitness": 0.5552814986437988
+  },
+  {
+   "id": 28,
+   "step": 16,
+   "origin": "mutation",
+   "config": {
+    "resolution": 32,
+    "stem_channels": 24,
+    "stages": [
+     {
+      "depth": 2,
+      "channels": 16,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "relu6"
+     },
+     {
+      "depth": 1,
+      "channels": 160,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "relu6"
+     },
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 5,
+      "block": "conv",
+      "activation": "leaky_relu"
+     }
+    ]
+   },
+   "latency_ms": 0.42427099999998996,
+   "latency_ms_p95": 0.4335431000000098,
+   "size_mb": 1.0607423782348633,
+   "peak_mem_mb": 12.671875,
+   "params": 277170,
+   "macs": 11780736,
+   "status": "rejected",
+   "reject_reason": "size 1.06MB > 1.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 29,
+   "step": 16,
+   "origin": "mutation",
+   "config": {
+    "resolution": 32,
+    "stem_channels": 24,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 3,
+      "channels": 128,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 3,
+      "channels": 160,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu6"
+     },
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     }
+    ]
+   },
+   "latency_ms": 1.8343125000000042,
+   "latency_ms_p95": 1.844548250000004,
+   "size_mb": 2.7695627212524414,
+   "peak_mem_mb": 16.09375,
+   "params": 726434,
+   "macs": 68869248,
+   "status": "rejected",
+   "reject_reason": "latency 1.83ms > 1.5ms; size 2.77MB > 1.0MB; memory 16.1MB > 16.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 30,
+   "step": 16,
+   "origin": "mutation",
+   "config": {
+    "resolution": 32,
+    "stem_channels": 32,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 16,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "relu"
+     },
+     {
+      "depth": 2,
+      "channels": 48,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 0.3246044999999989,
+   "latency_ms_p95": 0.3299586499999958,
+   "size_mb": 0.11879825592041016,
+   "peak_mem_mb": 9.4375,
+   "params": 30666,
+   "macs": 9306592,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 46.62,
+   "train_acc": 44.87847222222222,
+   "train_time_s": 10.26212477684021,
+   "fitness": 0.4573319448815918
+  },
+  {
+   "id": 31,
+   "step": 17,
+   "origin": "mutation",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 32,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 16,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 2,
+      "channels": 48,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 0.16729199999998556,
+   "latency_ms_p95": 0.17253329999999262,
+   "size_mb": 0.06974124908447266,
+   "peak_mem_mb": 9.421875,
+   "params": 17258,
+   "macs": 2978272,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 50.76,
+   "train_acc": 48.537660256410255,
+   "train_time_s": 2.8932299613952637,
+   "fitness": 0.5028593350183108
+  },
+  {
+   "id": 32,
+   "step": 18,
+   "origin": "crossover",
+   "config": {
+    "resolution": 32,
+    "stem_channels": 16,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 48,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 2,
+      "channels": 48,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 1,
+      "channels": 128,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "relu6"
+     }
+    ]
+   },
+   "latency_ms": 1.9993330000000058,
+   "latency_ms_p95": 2.0158791499999995,
+   "size_mb": 2.0465869903564453,
+   "peak_mem_mb": 13.78125,
+   "params": 536058,
+   "macs": 84591872,
+   "status": "rejected",
+   "reject_reason": "latency 2.00ms > 1.5ms; size 2.05MB > 1.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 33,
+   "step": 18,
+   "origin": "mutation",
+   "config": {
+    "resolution": 32,
+    "stem_channels": 24,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 48,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 3,
+      "channels": 128,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "relu"
+     },
+     {
+      "depth": 2,
+      "channels": 128,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu6"
+     },
+     {
+      "depth": 3,
+      "channels": 48,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "leaky_relu"
+     }
+    ]
+   },
+   "latency_ms": 1.2895410000000052,
+   "latency_ms_p95": 1.3006229499999826,
+   "size_mb": 1.724287986755371,
+   "peak_mem_mb": 14.453125,
+   "params": 452018,
+   "macs": 43610592,
+   "status": "rejected",
+   "reject_reason": "size 1.72MB > 1.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 34,
+   "step": 18,
+   "origin": "mutation",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 32,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 16,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 2,
+      "channels": 24,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 0.1998749999999952,
+   "latency_ms_p95": 0.2038916500000057,
+   "size_mb": 0.2235269546508789,
+   "peak_mem_mb": 9.5625,
+   "params": 57626,
+   "macs": 5591280,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 51.92,
+   "train_acc": 49.606036324786324,
+   "train_time_s": 3.4513840675354004,
+   "fitness": 0.5107319609069826
+  },
+  {
+   "id": 35,
+   "step": 19,
+   "origin": "mutation",
+   "config": {
+    "resolution": 24,
+    "stem_channels": 16,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 160,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 3,
+      "block": "dwsep",
+      "activation": "relu6"
+     }
+    ]
+   },
+   "latency_ms": 1.5187499999999923,
+   "latency_ms_p95": 1.5293670000000017,
+   "size_mb": 0.29326820373535156,
+   "peak_mem_mb": 11.125,
+   "params": 77034,
+   "macs": 37735552,
+   "status": "rejected",
+   "reject_reason": "latency 1.52ms > 1.5ms",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 36,
+   "step": 19,
+   "origin": "mutation",
+   "config": {
+    "resolution": 32,
+    "stem_channels": 32,
+    "stages": [
+     {
+      "depth": 2,
+      "channels": 48,
+      "kernel": 5,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 3,
+      "channels": 64,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 2.467583499999995,
+   "latency_ms_p95": 2.477052400000011,
+   "size_mb": 0.4372882843017578,
+   "peak_mem_mb": 11.078125,
+   "params": 114170,
+   "macs": 103199360,
+   "status": "rejected",
+   "reject_reason": "latency 2.47ms > 1.5ms",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 37,
+   "step": 19,
+   "origin": "mutation",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 32,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 16,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 2,
+      "channels": 24,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "silu"
+     },
+     {
+      "depth": 1,
+      "channels": 48,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "leaky_relu"
+     }
+    ]
+   },
+   "latency_ms": 0.20960399999999518,
+   "latency_ms_p95": 0.2128559500000085,
+   "size_mb": 0.2650480270385742,
+   "peak_mem_mb": 9.609375,
+   "params": 68330,
+   "macs": 5757408,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 49.6,
+   "train_acc": 47.829861111111114,
+   "train_time_s": 3.492034912109375,
+   "fitness": 0.48650695945922856
+  },
+  {
+   "id": 38,
+   "step": 20,
+   "origin": "crossover",
+   "config": {
+    "resolution": 24,
+    "stem_channels": 24,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 48,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu"
+     },
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 7,
+      "block": "dwsep",
+      "activation": "relu6"
+     }
+    ]
+   },
+   "latency_ms": 0.3097295000000014,
+   "latency_ms_p95": 0.3181583500000022,
+   "size_mb": 0.06929969787597656,
+   "peak_mem_mb": 9.46875,
+   "params": 17458,
+   "macs": 7126912,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 48.08,
+   "train_acc": 45.592948717948715,
+   "train_time_s": 7.318871974945068,
+   "fitness": 0.47321941604248047
+  },
+  {
+   "id": 39,
+   "step": 21,
+   "origin": "mutation",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 32,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 64,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 3,
+      "channels": 48,
+      "kernel": 5,
+      "block": "conv",
+      "activation": "silu"
+     }
+    ]
+   },
+   "latency_ms": 0.8793334999999958,
+   "latency_ms_p95": 0.9113955,
+   "size_mb": 1.125234603881836,
+   "peak_mem_mb": 12.890625,
+   "params": 294186,
+   "macs": 38199776,
+   "status": "rejected",
+   "reject_reason": "size 1.13MB > 1.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 40,
+   "step": 21,
+   "origin": "mutation",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 32,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 24,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 1,
+      "channels": 48,
+      "kernel": 3,
+      "block": "dwsep",
+      "activation": "hardswish"
+     }
+    ]
+   },
+   "latency_ms": 0.14191699999999835,
+   "latency_ms_p95": 0.14576665000000932,
+   "size_mb": 0.08099651336669922,
+   "peak_mem_mb": 9.515625,
+   "params": 20354,
+   "macs": 4732896,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 45.56,
+   "train_acc": 43.54967948717949,
+   "train_time_s": 2.7820379734039307,
+   "fitness": 0.4511417297326661
+  },
+  {
+   "id": 41,
+   "step": 22,
+   "origin": "mutation",
+   "config": {
+    "resolution": 16,
+    "stem_channels": 32,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 16,
+      "kernel": 3,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 2,
+      "channels": 48,
+      "kernel": 3,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     }
+    ]
+   },
+   "latency_ms": 0.06616599999999945,
+   "latency_ms_p95": 0.06663540000000079,
+   "size_mb": 0.032623291015625,
+   "peak_mem_mb": 9.40625,
+   "params": 7210,
+   "macs": 864736,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 47.1,
+   "train_acc": 44.791666666666664,
+   "train_time_s": 2.747670888900757,
+   "fitness": 0.4690242141796876
+  },
+  {
+   "id": 42,
+   "step": 23,
+   "origin": "mutation",
+   "config": {
+    "resolution": 24,
+    "stem_channels": 32,
+    "stages": [
+     {
+      "depth": 3,
+      "channels": 16,
+      "kernel": 3,
+      "block": "dwsep",
+      "activation": "leaky_relu"
+     },
+     {
+      "depth": 2,
+      "channels": 160,
+      "kernel": 7,
+      "block": "conv",
+      "activation": "relu"
+     }
+    ]
+   },
+   "latency_ms": 3.8528960000000083,
+   "latency_ms_p95": 3.8873839999999897,
+   "size_mb": 5.285984992980957,
+   "peak_mem_mb": 28.484375,
+   "params": 1384842,
+   "macs": 200117824,
+   "status": "rejected",
+   "reject_reason": "latency 3.85ms > 1.5ms; size 5.29MB > 1.0MB; memory 28.5MB > 16.0MB",
+   "val_acc": null,
+   "fitness": null
+  },
+  {
+   "id": 43,
+   "step": 23,
+   "origin": "crossover",
+   "config": {
+    "resolution": 24,
+    "stem_channels": 24,
+    "stages": [
+     {
+      "depth": 1,
+      "channels": 48,
+      "kernel": 3,
+      "block": "dwsep",
+      "activation": "relu"
+     },
+     {
+      "depth": 2,
+      "channels": 64,
+      "kernel": 5,
+      "block": "dwsep",
+      "activation": "relu"
+     },
+     {
+      "depth": 1,
+      "channels": 128,
+      "kernel": 3,
+      "block": "conv",
+      "activation": "relu6"
+     }
+    ]
+   },
+   "latency_ms": 0.2792500000000017,
+   "latency_ms_p95": 0.28502680000000236,
+   "size_mb": 0.33817100524902344,
+   "peak_mem_mb": 10.171875,
+   "params": 87930,
+   "macs": 5252096,
+   "status": "trained",
+   "reject_reason": "",
+   "val_acc": 55.02,
+   "train_acc": 52.50400641025641,
+   "train_time_s": 9.103079080581665,
+   "fitness": 0.5378515798950195
+  }
+ ]
+}

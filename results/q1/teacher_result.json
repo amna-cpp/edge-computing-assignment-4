@@ -1,0 +1,18 @@
+{
+  "test_acc": 67.9,
+  "epochs": 24,
+  "params": 23705252,
+  "macs": 324657152,
+  "args": {
+    "epochs": 24,
+    "batch_size": 128,
+    "lr": 0.1,
+    "weight_decay": 0.0005,
+    "stem_stride": 2,
+    "label_smoothing": 0.0,
+    "amp": "none",
+    "seed": 0,
+    "device": "auto",
+    "no_resume": false
+  }
+}
